@@ -3,5 +3,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "author": "Edwin Joseph",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "start": "http-server -d false"
+  },
+  "dependencies": {
+    "http-server": "^0.12.3"
+  }
 }
