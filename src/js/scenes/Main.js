@@ -4,6 +4,8 @@ import images from '../../assets/*.png'
 let platforms;
 let player;
 let stars;
+let scoreText;
+let score = 0;
 
 class Main extends Phaser.Scene {
   constructor() {
@@ -81,7 +83,15 @@ class Main extends Phaser.Scene {
     this.physics.add.collider(stars, platforms);
     this.physics.add.overlap(player, stars, (_, star) => {
       star.disableBody(true, true);
+
+      score += 10;
+      scoreText.setText(`Score: ${score}`);
     });
+
+    scoreText = this.add.text(16, 16, 'Score: 0', {
+      fontSize: '32px',
+      fill: '#000',
+    });    
   }
 
   update() {
