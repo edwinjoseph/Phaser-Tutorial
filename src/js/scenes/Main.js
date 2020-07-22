@@ -65,6 +65,27 @@ class Main extends Phaser.Scene {
       frameRate: 10,
       repeat: -1
     });
+
+    this.physics.add.collider(player, platforms);
+
+
+  update() {
+    const { left, right, up } = this.input.keyboard.createCursorKeys();
+
+    if (left.isDown) {
+      player.setVelocityX(-160);
+      player.anims.play('left', true);
+    } else if (right.isDown) {
+      player.setVelocityX(160);
+      player.anims.play('right', true);
+    } else {
+      player.setVelocityX(0);
+      player.anims.play('turn');
+    }
+
+    if (up.isDown && player.body.touching.down) {
+      player.setVelocityY(-330);
+    }
   }
 }
 
