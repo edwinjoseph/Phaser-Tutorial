@@ -3,6 +3,7 @@ import images from '../../assets/*.png'
 
 let platforms;
 let player;
+let stars;
 
 class Main extends Phaser.Scene {
   constructor() {
@@ -68,6 +69,20 @@ class Main extends Phaser.Scene {
 
     this.physics.add.collider(player, platforms);
 
+    stars = this.physics.add.group({
+      key: 'star',
+      repeat: 11,
+      setXY: { x: 12, y: 0, stepX: 70 },
+    });
+    stars.children.iterate(child => {
+      child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+    });
+
+    this.physics.add.collider(stars, platforms);
+    this.physics.add.overlap(player, stars, (_, star) => {
+      star.disableBody(true, true);
+    });
+  }
 
   update() {
     const { left, right, up } = this.input.keyboard.createCursorKeys();
