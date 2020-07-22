@@ -9,5 +9,8 @@
   },
   "dependencies": {
     "phaser": "^3.24.1"
+  },
+  "devDependencies": {
+    "sass": "^1.26.10"
   }
 }
