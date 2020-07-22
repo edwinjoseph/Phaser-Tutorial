@@ -1,10 +1,19 @@
 import Phaser from 'phaser';
 import images from '../../assets/*.png'
 
+let platforms;
+
 class Main extends Phaser.Scene {
   constructor() {
     super({
       key: 'main',
+      physics: {
+        default: 'arcade',
+        arcade: {
+          gravity: { y: 300 },
+          debug: false
+        }
+      },
     });
   }
 
@@ -21,6 +30,17 @@ class Main extends Phaser.Scene {
 
   create() {
     this.add.image(0, 0, 'sky').setOrigin(0, 0);
+
+    platforms = this.physics.add.staticGroup();
+
+    platforms
+      .create(400, 568, 'ground')
+      .setScale(2)
+      .refreshBody();
+
+    platforms.create(600, 400, 'ground');
+    platforms.create(50, 250, 'ground');
+    platforms.create(750, 220, 'ground');
   }
 }
 
