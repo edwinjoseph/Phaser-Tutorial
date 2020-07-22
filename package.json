@@ -5,10 +5,9 @@
   "author": "Edwin Joseph",
   "license": "MIT",
   "scripts": {
-    "start": "http-server -d false"
+    "start": "parcel src/index.html"
   },
   "dependencies": {
-    "http-server": "^0.12.3",
     "phaser": "^3.24.1"
   }
 }
