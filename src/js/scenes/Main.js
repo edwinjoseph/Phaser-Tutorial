@@ -4,8 +4,12 @@ import images from '../../assets/*.png'
 let platforms;
 let player;
 let stars;
+let bombs;
+
 let scoreText;
 let score = 0;
+
+let gameOver;
 
 class Main extends Phaser.Scene {
   constructor() {
@@ -86,7 +90,30 @@ class Main extends Phaser.Scene {
 
       score += 10;
       scoreText.setText(`Score: ${score}`);
+
+      if (!stars.countActive()) {
+        stars.children.iterate(child => {
+          child.enableBody(true, child.x, 0, true, true);
+        });
+
+        let x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+        let bomb = bombs.create(x, 16, 'bomb');
+
+        bomb.setBounce(1);
+        bomb.setCollideWorldBounds(true);
+        bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+      }
     });
+
+    bombs = this.physics.add.group();
+
+    this.physics.add.collider(bombs, platforms);
+    this.physics.add.collider(player, bombs, () => {
+      this.physics.pause();
+      player.setTint(0xFF0000);
+      player.anims.play('idle');
+      gameOver = true;
+    }, null);
 
     scoreText = this.add.text(16, 16, 'Score: 0', {
       fontSize: '32px',
