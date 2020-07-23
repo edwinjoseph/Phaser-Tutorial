@@ -62,7 +62,7 @@ class Main extends Phaser.Scene {
       repeat: -1,
     })
     this.anims.create({
-      key: 'turn',
+      key: 'idle',
       frames: [{ key: 'player', frame: 4 }],
       frameRate: 20
     });
@@ -132,7 +132,7 @@ class Main extends Phaser.Scene {
       player.anims.play('right', true);
     } else {
       player.setVelocityX(0);
-      player.anims.play('turn');
+      player.anims.play('idle');
     }
 
     if (up.isDown && player.body.touching.down) {
