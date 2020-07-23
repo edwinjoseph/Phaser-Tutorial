@@ -199,16 +199,14 @@ class Main extends Phaser.Scene {
         fontSize: '28px'
       });
 
-      submitScore.on('click', async () => { 
-        if (!nameInput.text) {
-          nameInput.setFocus();
-          return;
-        }
-        
-        const prevScore = await localForage.getItem(nameInput.text);
+      submitScore.on('click', async () => {
+        const player = nameInput.text || 'Anon';
+
+        let prevScore = await localForage.getItem(player);
         
         if (prevScore < score) {
-          await localForage.setItem(nameInput.text, score);
+          prevScore = score;
+          await localForage.setItem(player, score);
         }
 
         const scoreboard = [];
