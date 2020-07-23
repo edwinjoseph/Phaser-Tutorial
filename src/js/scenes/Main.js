@@ -124,19 +124,24 @@ class Main extends Phaser.Scene {
   update() {
     const { left, right, up } = this.input.keyboard.createCursorKeys();
 
-    if (left.isDown) {
-      player.setVelocityX(-160);
-      player.anims.play('left', true);
-    } else if (right.isDown) {
-      player.setVelocityX(160);
-      player.anims.play('right', true);
+    if (!gameOver) {
+      if (left.isDown) {
+        player.setVelocityX(-160);
+        player.anims.play('left', true);
+      } else if (right.isDown) {
+        player.setVelocityX(160);
+        player.anims.play('right', true);
+      } else {
+        player.setVelocityX(0);
+        player.anims.play('idle');
+      }
+
+      if (up.isDown && player.body.touching.down) {
+        player.setVelocityY(-330);
+      }
     } else {
       player.setVelocityX(0);
       player.anims.play('idle');
-    }
-
-    if (up.isDown && player.body.touching.down) {
-      player.setVelocityY(-330);
     }
   }
 }
