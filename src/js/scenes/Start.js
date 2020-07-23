@@ -10,17 +10,18 @@ class Start extends Phaser.Scene {
   }
 
   preload() {
+    const width = this.cameras.main.width;
+    const height = this.cameras.main.height;
+    
+    const centeredHorizontily = width / 2;
+    const centeredVertically = height / 2;
+
+
     const progressBar = this.add.graphics();
     const progressBox = this.add.graphics();
 
     progressBox.fillStyle(0x222222, 0.8);
-    progressBox.fillRect(240, 270, 320, 50);
-
-    const width = this.cameras.main.width;
-    const height = this.cameras.main.height;
-
-    const centeredHorizontily = width / 2;
-    const centeredVertically = height / 2;
+    progressBox.fillRect(centeredHorizontily - 160, centeredVertically - 30, 320, 50);
 
     const loadingText = this.make.text({
       x: centeredHorizontily,
@@ -79,7 +80,7 @@ class Start extends Phaser.Scene {
     this.load.on('progress', (value) => {
       progressBar.clear();
       progressBar.fillStyle(0xffffff, 1);
-      progressBar.fillRect(250, 280, 300 * value, 30);
+      progressBar.fillRect(centeredHorizontily - 150, centeredVertically - 20, 300 * value, 30);
 
       percentText.setText(`${parseInt(value * 100, 10)}%`);
     });            

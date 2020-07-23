@@ -48,7 +48,6 @@ class Main extends Phaser.Scene {
     let scoreText;
     let score = 0;
 
-    
     background.play();
 
     this.add.image(0, 0, 'sky').setOrigin(0, 0);

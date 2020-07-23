@@ -6,6 +6,9 @@ const config = {
   type: Phaser.AUTO,
   width: 800,
   height: 600,
+  scale: {
+    autoCenter: Phaser.Scale.CENTER_BOTH
+  },
   scene: [Start, Game],
 }
 
