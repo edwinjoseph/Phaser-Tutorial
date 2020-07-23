@@ -137,6 +137,9 @@ class Main extends Phaser.Scene {
     this.physics.add.collider(bombs, platforms, () => {
       bombBounce.play();
     });
+    this.physics.add.collider(bombs, bombs, () => {
+      bombBounce.play();
+    });
     this.physics.add.collider(player, bombs, () => {
       starCollected.stop();
       starsCollected.stop();
