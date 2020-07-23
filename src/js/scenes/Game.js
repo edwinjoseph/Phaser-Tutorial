@@ -1,13 +1,11 @@
 import Phaser from 'phaser';
 
-let platforms;
 let player;
-let stars;
-let bombs;
-
-let scoreText;
-let score = 0;
-
+let background;
+let starCollected;
+let starsCollected;
+let bombBounce;
+let death;
 let gameOver;
 
 class Main extends Phaser.Scene {
@@ -23,7 +21,36 @@ class Main extends Phaser.Scene {
     });
   }
 
+  preload() {
+    background = this.sound.add('background', {
+      volume: 0.1,
+      loop: true,
+    });
+    starCollected = this.sound.add('star_collected', {
+      volume: 0.06
+    });
+    starsCollected = this.sound.add('stars_collected', {
+      volume: 0.06
+    });
+    bombBounce = this.sound.add('bomb_bounce', {
+      volume: 0.06
+    });
+    death = this.sound.add('death', {
+      volume: 0.3
+    });
+  }
+
   create() {
+    let platforms;
+    let stars;
+    let bombs;
+    
+    let scoreText;
+    let score = 0;
+
+    
+    background.play();
+
     this.add.image(0, 0, 'sky').setOrigin(0, 0);
 
     platforms = this.physics.add.staticGroup();
@@ -85,11 +112,13 @@ class Main extends Phaser.Scene {
     this.physics.add.collider(stars, platforms);
     this.physics.add.overlap(player, stars, (_, star) => {
       star.disableBody(true, true);
-
+      starCollected.play();
       score += 10;
       scoreText.setText(`Score: ${score}`);
 
       if (!stars.countActive()) {
+        starCollected.stop();
+        starsCollected.play();
         stars.children.iterate(child => {
           child.enableBody(true, child.x, 0, true, true);
         });
@@ -105,12 +134,29 @@ class Main extends Phaser.Scene {
 
     bombs = this.physics.add.group();
 
-    this.physics.add.collider(bombs, platforms);
+    this.physics.add.collider(bombs, platforms, () => {
+      bombBounce.play();
+    });
     this.physics.add.collider(player, bombs, () => {
+      starCollected.stop();
+      starsCollected.stop();
+      death.play();
+
       this.physics.pause();
+
       player.setTint(0xFF0000);
       player.anims.play('idle');
       gameOver = true;
+
+      this.time.addEvent({
+        delay: 1000,
+        callback: () => {
+          gameOver = null;
+          background.stop();
+          this.physics.resume();
+          this.scene.restart();
+        }
+      })
     }, null);
 
     scoreText = this.add.text(16, 16, 'Score: 0', {

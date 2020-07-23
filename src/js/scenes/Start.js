@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import images from '../../assets/*.png';
+import sounds from '../../assets/*.mp3';
 
 class Start extends Phaser.Scene {
   constructor() {
@@ -56,6 +57,7 @@ class Start extends Phaser.Scene {
 
 
     this.load.image('phaser', images.phaser);
+    this.load.image('zapsplat', images.zapsplat);
 
     this.load.image('sky', images.sky);
     this.load.image('ground', images.platform);
@@ -65,6 +67,14 @@ class Start extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 48,
     });
+
+    console.log(images, sounds);
+
+    this.load.audio('background', sounds.background);
+    this.load.audio('star_collected', sounds.star_collected);
+    this.load.audio('stars_collected', sounds.stars_collected);
+    this.load.audio('death', sounds.death);
+    this.load.audio('bomb_bounce', sounds.bomb_bounce);
 
     this.load.on('progress', (value) => {
       progressBar.clear();
@@ -92,7 +102,7 @@ class Start extends Phaser.Scene {
     const centeredHorizontily = width / 2;
     const centeredVertically = height / 2;
 
-    const madeWithText = this.make.text({
+    const logoText = this.make.text({
       x: centeredHorizontily,
       y: centeredVertically - 50,
       text: 'Made with',
@@ -100,13 +110,24 @@ class Start extends Phaser.Scene {
         fill: '#ffffff'
       }
     });
-    madeWithText.setOrigin(0.5, 0.5);
+    logoText.setOrigin(0.5, 0.5);
 
-    this.add.image(centeredHorizontily, centeredVertically, 'phaser');
-
+    const phaserImage = this.add.image(centeredHorizontily, centeredVertically, 'phaser');
+    
     this.time.addEvent({
-      delay: 1000,
-      callback: () => this.scene.start('game')
+      delay: 2000,
+      callback: () => {
+        phaserImage.destroy();
+        logoText.setText('Sounds from');
+        this.add.image(centeredHorizontily, centeredVertically, 'zapsplat');
+
+        this.time.addEvent({
+          delay: 2000,
+          callback: () => {
+            this.scene.start('game')
+          }
+        })
+      }
     })
   }
 }
