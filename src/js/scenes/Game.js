@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import localForage from 'localforage';
 
 let player;
 let background;
@@ -146,16 +147,88 @@ class Main extends Phaser.Scene {
       player.setTint(0xFF0000);
       player.anims.play('idle');
       gameOver = true;
+      scoreText.visible = false;
 
-      this.time.addEvent({
-        delay: 1000,
-        callback: () => {
-          gameOver = null;
-          background.stop();
-          this.physics.resume();
-          this.scene.restart();
+      const width = this.cameras.main.width;
+      const height = this.cameras.main.height;
+      
+      const centeredHorizontily = width / 2;
+      const centeredVertically = height / 2;
+
+      const gameOverBox = this.add.graphics();
+      const gameOverBoxW = 600;
+      const gameOverBoxH = 320;
+      const gameOverBoxX = centeredHorizontily - (gameOverBoxW / 2);
+      const gameOverBoxY = centeredVertically - (gameOverBoxH / 2);
+
+      gameOverBox.fillStyle(0x222222, 0.8);
+      gameOverBox.fillRect(gameOverBoxX, gameOverBoxY, gameOverBoxW, gameOverBoxH);
+
+      const gameOverText = this.add.text(centeredHorizontily, gameOverBoxY + 60, `Final score: ${score}`, {
+        fontSize: '40px',
+        fill: '#FFF',
+        align: 'center'
+      }).setOrigin(0.5);
+
+      const nameInput = this.add.rexInputText(centeredHorizontily, gameOverBoxY + 140, gameOverBoxW - 40, 70, {
+        placeholder: 'Enter your name',
+        fontFamily: 'monospace',
+        align: 'center',
+        color: '#CCC',
+        paddingLeft: '20px',
+        paddingRight: '20px',
+        paddingTop: '16px',
+        paddingBottom: '16px',
+        fontSize: '32px'
+      });
+
+      const submitScore = this.add.rexInputText(centeredHorizontily, gameOverBoxY + 240, 390, 70, {
+        type: 'submit',
+        text: 'Submit your score!',
+        fontFamily: 'monospace',
+        align: 'center',
+        color: '#000',
+        backgroundColor: '#FFF',
+        paddingLeft: '20px',
+        paddingRight: '20px',
+        paddingTop: '16px',
+        paddingBottom: '16px',
+        fontSize: '28px'
+      });
+
+      submitScore.on('click', async () => { 
+        if (!nameInput.text) {
+          nameInput.setFocus();
+          return;
         }
-      })
+        
+        const prevScore = await localForage.getItem(nameInput.text);
+        
+        if (prevScore < score) {
+          await localForage.setItem(nameInput.text, score);
+        }
+
+        const scoreboard = [];
+
+        await localForage.iterate((score, name) => {
+          scoreboard.push({
+            name,
+            score,
+          })
+        })
+
+        scoreboard.sort((a, b) => {
+          return b.score - a.score;
+        })
+
+        gameOver = null;
+        scoreText.visible = true;
+        background.stop();
+        this.physics.resume();
+        this.scene.restart();
+      });
+
+
     }, null);
 
     scoreText = this.add.text(16, 16, 'Score: 0', {

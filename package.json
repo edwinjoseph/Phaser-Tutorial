@@ -9,10 +9,15 @@
     "build": "parcel build src/index.html"
   },
   "dependencies": {
+    "localforage": "^1.8.1",
     "parcel-bundler": "^1.12.4",
-    "phaser": "^3.24.1"
+    "phaser": "^3.24.1",
+    "phaser3-rex-plugins": "^1.1.21"
   },
   "devDependencies": {
     "sass": "^1.26.10"
-  }
+  },
+  "browserslist": [
+    "defaults"
+  ]
 }

@@ -69,8 +69,6 @@ class Start extends Phaser.Scene {
       frameHeight: 48,
     });
 
-    console.log(images, sounds);
-
     this.load.audio('background', sounds.background);
     this.load.audio('star_collected', sounds.star_collected);
     this.load.audio('stars_collected', sounds.stars_collected);
