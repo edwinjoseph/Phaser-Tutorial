@@ -1,5 +1,4 @@
 import Phaser from 'phaser';
-import images from '../../assets/*.png'
 
 let platforms;
 let player;
@@ -14,25 +13,13 @@ let gameOver;
 class Main extends Phaser.Scene {
   constructor() {
     super({
-      key: 'main',
+      key: 'game',
       physics: {
         default: 'arcade',
         arcade: {
           gravity: { y: 300 },
-          debug: false
         }
       },
-    });
-  }
-
-  preload() {
-    this.load.image('sky', images.sky);
-    this.load.image('ground', images.platform);
-    this.load.image('star', images.star);
-    this.load.image('bomb', images.bomb);
-    this.load.spritesheet('player', images.dude, {
-      frameWidth: 32,
-      frameHeight: 48,
     });
   }
 
@@ -72,6 +59,16 @@ class Main extends Phaser.Scene {
       frameRate: 10,
       repeat: -1
     });
+    this.anims.create({
+      key: 'jump_left',
+      frames: [{ key: 'player', frame: 3 }],
+      frameRate: 20
+    });
+    this.anims.create({
+      key: 'jump_right',
+      frames: [{ key: 'player', frame: 6 }],
+      frameRate: 20
+    });
 
     this.physics.add.collider(player, platforms);
 
@@ -80,8 +77,9 @@ class Main extends Phaser.Scene {
       repeat: 11,
       setXY: { x: 12, y: 0, stepX: 70 },
     });
+    
     stars.children.iterate(child => {
-      child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+      child.setGravity(0, 10)
     });
 
     this.physics.add.collider(stars, platforms);
@@ -138,6 +136,15 @@ class Main extends Phaser.Scene {
 
       if (up.isDown && player.body.touching.down) {
         player.setVelocityY(-330);
+      }
+
+      if (!player.body.touching.down) {
+        if (left.isDown) {
+          player.anims.play('jump_left', true);
+        }
+        if (right.isDown) {
+          player.anims.play('jump_right', true);
+        } 
       }
     } else {
       player.setVelocityX(0);
