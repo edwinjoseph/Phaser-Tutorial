@@ -5,9 +5,11 @@
   "author": "Edwin Joseph",
   "license": "MIT",
   "scripts": {
-    "start": "parcel src/index.html"
+    "start": "parcel serve src/index.html --no-hmr --open",
+    "build": "parcel build src/index.html"
   },
   "dependencies": {
+    "parcel-bundler": "^1.12.4",
     "phaser": "^3.24.1"
   },
   "devDependencies": {
